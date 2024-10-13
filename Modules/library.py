@@ -1,9 +1,13 @@
-import helpers
-from book import Book
+import Modules.helpers as helpers
+from Modules.book import Book
 class Library:
-    def __init__(self, books:list[Book]) -> None:
+    def __init__(self) -> None:
         self.books:dict[str,Book] = helpers.read_from_file('Data_files/books.pkl')
         self.taken_books = []
+        users = helpers.read_from_file('Data_files/users.pkl')
+        self.users = {}
+        self.users['readers'] = users['readers']
+        self.users['librarians'] = users['librarians']
 
     
     def add_book(self, book:Book) -> None:

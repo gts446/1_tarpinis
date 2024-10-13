@@ -3,6 +3,7 @@
 #     file_path = os.path.join(script_dir, file_name)
 
 #     return file_path
+import pickle
 
 def write_to_file(file, data):
     with open(file, 'wb') as f:
@@ -22,3 +23,35 @@ def generate_book_id(author, title, year):
     id = hashlib.md5(name.encode()).hexdigest()
 
     return name
+
+def genres():
+    return sorted(["Fiction",
+        "Non-fiction",
+        "Mystery",
+        "Thriller",
+        "Fantasy",
+        "Science Fiction",
+        "Romance",
+        "Historical Fiction",
+        "Biography",
+        "Self-help",
+        "Graphic Novel",
+        "Poetry",
+        "Horror",
+        "Adventure",
+        "Young Adult",
+        "Children's Literature",
+        "Classics",
+        "Crime",
+        "Dystopian",
+        "Humor",
+        "Memoir",
+        "Philosophy",
+        "Spirituality",
+        "Science",
+        "Travel",
+        "Western",
+        "Drama",
+        "Mythology",
+        "Short Stories",
+        "Psychology"])
