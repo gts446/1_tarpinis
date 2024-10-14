@@ -61,3 +61,12 @@ def mark_session(page):
     if st.session_state['current_page'] != page:
         st.session_state['current_page'] = page
         st.rerun()
+
+def show_messages():
+    if st.session_state['messages']:
+        for message in st.session_state['messages']:
+            if message['status'] == 'warning':
+                st.warning(message['text'])
+            elif message['status'] == 'success':
+                st.success(message['text'])
+        st.session_state['messages'] = []

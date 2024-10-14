@@ -66,7 +66,7 @@ def create_book(my_library:md.Library):
                 st.success("Book successfuly added")
 
 def add_reader(my_library:md.Library):
-    for user in my_library.users['readers'].values():
+    for user in my_library.readers.values():
         st.write(f"{user.name} - {user.card_number}")
     with st.form("reader"):
         name = st.text_input("Name")
@@ -80,3 +80,92 @@ def add_reader(my_library:md.Library):
                     st.warning(f"Reader card **{card_number}** already exists")
             else:
                 st.warning("Please fill all fields")
+
+def taken_books(my_library:md.Library):
+    pass
+
+
+def show_books_reader(my_library: md.Library):
+    col1, col2 = st.columns([1,1])
+
+    with col1:
+        author = st.text_input("Author")
+
+    with col2:
+        title = st.text_input("Title")        
+
+
+    headers = ["Nr.", "Author", "Title", "Year", "Avail.", "Action"]
+    col_widths = [1, 3, 3, 1, 1, 1]
+
+    cols = st.columns(col_widths)
+    for col, header in zip(cols, headers):
+        col.write(f"**{header}**")
+    i = 1
+    for book in my_library.get_books(author, title).values():
+
+        col1, col2, col3, col4, col5, col6 = st.columns(col_widths)
+        col1.markdown(i)
+        col2.write(book.author)
+        col3.write(book.title)
+        col4.markdown(book.year)
+        remaining = book.quantity-book.taken
+        if remaining == 0:
+            col5.markdown(f'<span style="color:red">{remaining}</span>',unsafe_allow_html=True)
+        else:
+            col5.markdown(f'<span style="color:green">{remaining}</span>',unsafe_allow_html=True)
+        i +=1
+        if remaining > 0:
+            if col6.button("Take", key=book.id):
+                if book.id in my_library.readers[st.session_state['card_number']].books:
+                    st.session_state['messages'].append({'status':'warning','text':'You already have a copy of this book'})
+                else:
+                    allow_takeaway = True
+                    for book_id, date_taken in my_library.readers[st.session_state['card_number']].books.items():
+                        duration = date.today() - date_taken
+                        if duration.days > 30:
+                            allow_takeaway = False
+                            break
+                    if allow_takeaway:
+                        my_library.give_book(my_library.readers[st.session_state['card_number']], book)
+                        st.session_state['messages'].append({'status':'success','text':'Book successfully taken'})
+                    else:
+                        st.session_state['messages'].append({'status':'warning','text':'You have overdue books. Return them before taking new books'})
+                st.rerun()
+
+def show_my_books(my_library: md.Library):
+    col1, col2 = st.columns([1,1])
+
+    with col1:
+        author = st.text_input("Author")
+
+    with col2:
+        title = st.text_input("Title")        
+
+
+    headers = ["Nr.", "Author", "Title", "Year", "Taken", "Action"]
+    col_widths = [1, 3, 3, 1, 1, 1]
+
+    cols = st.columns(col_widths)
+    for col, header in zip(cols, headers):
+        col.write(f"**{header}**")
+    i = 1
+    books = my_library.get_books(author, title)
+    for book_id, date_taken in my_library.readers[st.session_state['card_number']].books.items():
+        col1, col2, col3, col4, col5, col6 = st.columns(col_widths)
+        col1.markdown(i)
+        col2.write(books[book_id].author)
+        col3.write(books[book_id].title)
+        col4.markdown(books[book_id].year)
+        duration = date.today() - date_taken
+        if duration.days > 30:
+            col5.markdown(f'<span style="color:red">{duration.days} days ago</span>',unsafe_allow_html=True)
+        else:
+            col5.markdown(f'<span style="color:green">{duration.days} days ago</span>',unsafe_allow_html=True)
+        i +=1
+        # if remaining > 0:
+        #     if col6.button("Take", key=book.id):
+        #         if book.id in my_library.readers[st.session_state['card_number']].books:
+        #             pass
+        #         else:
+        #             my_library.give_book(my_library.readers[st.session_state['card_number']], book)
