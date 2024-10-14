@@ -1,5 +1,6 @@
 import Modules.helpers as helpers
 from Modules.book import Book
+from datetime import date
 class Library:
     def __init__(self) -> None:
         self.books:dict[str,Book] = helpers.read_from_file('Data_files/books.pkl')
@@ -11,40 +12,40 @@ class Library:
 
     
     def add_book(self, book:Book) -> None:
-        book_id = helpers.generate_book_id(book.author, book.title, book.year)
-        if book_id in self.books:
-            self.books[book_id].quantity += book.quantity
+        if book.id in self.books:
+            self.books[book.id].quantity += book.quantity
         else:
-            self.books[book_id] = book
+            self.books[book.id] = book
         self.__update_books()
     
     def remove_book(self, book_id:str, quantity:int = 0):
             
             """
             Returns:
-            True - Book(s) has been successfully removed
-            0 - Book was not found
-            int(>0) - Book was found but remaining quantity is less than defined
+            int(>0) - Number of books that have been removed
             """
-            if book_id in self.books:
-                if quantity:
-                    if quantity > self.books[book_id].quantity:
-                        return self.books[book_id].quantity
-                    elif quantity == self.books[book_id].quantity:
-                        del self.books[book_id]
-                    else:
-                        self.books[book_id].quantity -= quantity
+            result = 0
+            if book_id not in self.books:
+                return result
+            remaining = self.books[book_id].quantity - self.books[book_id].taken
+            if quantity:
+                if quantity > remaining:
+                    return result
                 else:
-                     del self.books[book_id]
+                    self.books[book_id].quantity -= quantity
+                    result = quantity
             else:
-                 return 0
+                    self.books[book_id].quantity -= remaining
+                    result = remaining
+
             
             self.__update_books()
-            return True
+            return result
     
-    def get_books(self, author:str = "", title:str = ""):
-        return {book_id:book for book_id, book in self.books 
-                  if (author=="" or author == book.author) and (title=="" or author == book.title)}
+    def get_books(self, author:str = "", title:str = "", last_taken:date = None):
+        return {book_id:book for book_id, book in self.books.items() 
+                  if (author=="" or author.lower() in book.author.lower()) and 
+                  (title=="" or title.lower() in book.title.lower())}
     
     def get_taken_books():
         pass

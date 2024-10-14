@@ -4,6 +4,7 @@
 
 #     return file_path
 import pickle
+import streamlit as st
 
 def write_to_file(file, data):
     with open(file, 'wb') as f:
@@ -55,3 +56,8 @@ def genres():
         "Mythology",
         "Short Stories",
         "Psychology"])
+
+def mark_session(page):
+    if st.session_state['current_page'] != page:
+        st.session_state['current_page'] = page
+        st.rerun()

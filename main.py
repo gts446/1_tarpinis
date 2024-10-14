@@ -1,5 +1,7 @@
 import Modules as md
+import pages
 import streamlit as st
+import pandas as pd
 
 
 my_library = md.Library()
@@ -38,4 +40,19 @@ if not st.session_state['logged_in']:
                 st.error("Invalid credentials")
     
 else:
-    pass
+    if 'current_page' not in st.session_state:
+        st.session_state['current_page'] = ""
+    st.sidebar.write(f"Sveiki, {st.session_state['name']}")
+    st.sidebar.write('MENU:')
+    if st.session_state['user_type'] == 'librarian':
+        if st.sidebar.button("Show books") or st.session_state['current_page'] == 'show-books':
+            md.helpers.mark_session('show-books')
+            pages.show_books(my_library)
+
+        if st.sidebar.button("Add book") or st.session_state['current_page'] == 'add-book':
+            md.helpers.mark_session('add-book')
+            pages.create_book(my_library)
+            
+        if st.sidebar.button("Remove unused books") or st.session_state['current_page'] == 'remove-books':
+            md.helpers.mark_session('remove-books')
+            pages.remove_books(my_library)

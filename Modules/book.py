@@ -1,12 +1,15 @@
 import hashlib
+from datetime import date
 class Book:
-    def __init__(self, author:str, title:str, year:int, genre:str, qty:int) -> None:
+    def __init__(self, author:str, title:str, year:int, genre:str, qty:int, last_taken, taken) -> None:
         self.author:str = author
         self.title:str = title
         self.year:int = year
         self.genre:str = genre
         self.quantity:int = qty
-        self.available:int = qty
+        self.taken:int = taken
+        self.last_date_taken:date = last_taken #date.today()
+        self.is_deleted:bool = False
         self.id = self.__generate_book_id(author, title,year)
     
     def __generate_book_id(self,author, title, year):
