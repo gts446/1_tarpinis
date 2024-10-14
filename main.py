@@ -20,34 +20,9 @@ md.helpers.show_messages()
     
 
 if not st.session_state['logged_in']:
-    user_type = st.selectbox("Vartotojo tipas",['Skaitytojas', 'Bibliotekininkas'])
-    if user_type == "Skaitytojas":
-        card_number = st.text_input('Korteles numeris')
-    else:
-        username = st.text_input('Username')
-        password = st.text_input('Password', type="password")
-    if st.button('Prisijungti'):
-        if user_type == "Skaitytojas":
-            if card_number in my_library.readers:
-                st.session_state['logged_in'] = True
-                st.session_state['user_type'] = 'reader'
-                st.session_state['card_number'] = card_number
-                st.session_state['name'] = my_library.readers[card_number].name
-                st.rerun()
-            else:
-                st.error("Invalid card number")
-        else:
-            if username in my_library.librarians and password == my_library.librarians[username].password:
-                st.session_state['logged_in'] = True
-                st.session_state['user_type'] = 'librarian'
-                st.session_state['username'] = username
-                st.session_state['name'] = my_library.librarians[username].name
-                st.rerun()
-            else:
-                st.error("Invalid credentials")
-    
-else:
+    pages.show_login(my_library)
 
+else:
     st.sidebar.write(f"Sveiki, {st.session_state['name']}")
     st.sidebar.write('MENU:')
     if st.session_state['user_type'] == 'librarian':
@@ -70,7 +45,7 @@ else:
         page = 'taken-books'
         if st.sidebar.button("Show taken books") or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
-            pages.taken_books(my_library)
+            pages.show_taken_books(my_library)
 
 
     else:

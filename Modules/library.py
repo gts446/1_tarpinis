@@ -44,7 +44,7 @@ class Library:
         return {book_id:book for book_id, book in self.books.items() 
                   if (author=="" or author.lower() in book.author.lower()) and 
                   (title=="" or title.lower() in book.title.lower()) and 
-                  (ids=="" or book.id in ids)}
+                  (book.quantity > 0)}
     
     def add_reader(self, reader:Reader):
         if reader.card_number not in self.readers:
@@ -55,10 +55,18 @@ class Library:
             return False
         
     def give_book(self, reader:Reader, book:Book):
-        self.readers[reader.card_number].books[book.id] = date.today()
+        self.readers[reader.card_number].books[book.id] = date(2024,8,8)
         self.__update_readers_pkl()
 
         self.books[book.id].taken += 1
+        self.books[book.id].last_date_taken = date.today()
+        self.__update_books_pkl()
+
+    def return_book(self, reader:Reader, book:Book):
+        del self.readers[reader.card_number].books[book.id]
+        self.__update_readers_pkl()
+
+        self.books[book.id].taken -= 1
         self.__update_books_pkl()
 
     def __update_books_pkl(self):
