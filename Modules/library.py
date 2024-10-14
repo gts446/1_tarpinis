@@ -1,14 +1,13 @@
 import Modules.helpers as helpers
 from Modules.book import Book
+from Modules.user import Reader, Librarian
 from datetime import date
 class Library:
     def __init__(self) -> None:
         self.books:dict[str,Book] = helpers.read_from_file('Data_files/books.pkl')
         self.taken_books = []
-        users = helpers.read_from_file('Data_files/users.pkl')
-        self.users = {}
-        self.users['readers'] = users['readers']
-        self.users['librarians'] = users['librarians']
+        users:dict[str, Reader|Librarian] = helpers.read_from_file('Data_files/users.pkl')
+        self.users = users
 
     
     def add_book(self, book:Book) -> None:
@@ -22,7 +21,7 @@ class Library:
             
             """
             Returns:
-            int(>0) - Number of books that have been removed
+            int - Number of books that have been removed
             """
             result = 0
             if book_id not in self.books:
@@ -47,11 +46,13 @@ class Library:
                   if (author=="" or author.lower() in book.author.lower()) and 
                   (title=="" or title.lower() in book.title.lower())}
     
-    def get_taken_books():
-        pass
-
-    def take_book(self, book_id:str):
-        pass
+    def add_reader(self, reader:Reader):
+        if reader.card_number not in self.users['readers']:
+            self.users['readers'][reader.card_number] = reader
+            helpers.write_to_file('Data_files/users.pkl', self.users)
+            return True
+        else:
+            return False
 
     def __update_books(self):
         helpers.write_to_file('Data_files/books.pkl',self.books)

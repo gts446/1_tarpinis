@@ -52,7 +52,15 @@ else:
         if st.sidebar.button("Add book") or st.session_state['current_page'] == 'add-book':
             md.helpers.mark_session('add-book')
             pages.create_book(my_library)
+        
+        if st.sidebar.button("Add reader") or st.session_state['current_page'] == 'add-reader':
+            md.helpers.mark_session('add-reader')
+            pages.add_reader(my_library)
             
-        if st.sidebar.button("Remove unused books") or st.session_state['current_page'] == 'remove-books':
-            md.helpers.mark_session('remove-books')
-            pages.remove_books(my_library)
+    else:
+        pass
+
+    if st.sidebar.button('Logout'):
+        for key in st.session_state.keys():
+            del st.session_state[key]
+        st.rerun()
