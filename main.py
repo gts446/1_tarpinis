@@ -23,8 +23,7 @@ if not st.session_state['logged_in']:
     pages.show_login(my_library)
 
 else:
-    st.sidebar.write(f"Sveiki, {st.session_state['name']}")
-    st.sidebar.write('MENU:')
+    pages.show_sidebar()
     if st.session_state['user_type'] == 'librarian':
 
         page = 'show-books'

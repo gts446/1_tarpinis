@@ -30,6 +30,10 @@ def show_login(my_library: md.Library):
             else:
                 st.error("Invalid credentials")
 
+def show_sidebar():
+    st.sidebar.write(f"Hello, {st.session_state['name']}")
+    st.sidebar.write('MENU:')
+
 def show_books(my_library: md.Library):
     col1, col2, col3 = st.columns([1,1,1], vertical_alignment='bottom')
 
