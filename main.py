@@ -27,34 +27,34 @@ else:
     if st.session_state['user_type'] == 'librarian':
 
         page = 'show-books'
-        if st.sidebar.button("Show books") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Show books", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.show_books(my_library)
 
         page = 'add-book'
-        if st.sidebar.button("Add book") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Add book", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.create_book(my_library)
         
         page = 'add-reader'
-        if st.sidebar.button("Add reader") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Add reader", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.add_reader(my_library)
         
         page = 'taken-books'
-        if st.sidebar.button("Show taken books") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Show taken books", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.show_taken_books(my_library)
 
 
     else:
         page = 'show-books-reader'
-        if st.sidebar.button("Show library books") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Show library books", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.show_books_reader(my_library)
 
         page = 'show-my-books'
-        if st.sidebar.button("Show my books") or st.session_state['current_page'] == page:
+        if st.sidebar.button("Show my books", use_container_width=True) or st.session_state['current_page'] == page:
             md.helpers.mark_session(page)
             pages.show_my_books(my_library)
 
