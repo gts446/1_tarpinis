@@ -215,7 +215,7 @@ def show_my_books(my_library: md.Library):
     for col, header in zip(cols, headers):
         col.write(f"**{header}**")
     i = 1
-    my_journal = my_library.get_journal(st.session_state['card_number'])
+    my_journal = my_library.get_journal(st.session_state['user_id'])
     if my_journal:
         for book in my_journal:
             col1, col2, col3, col4, col5, col6 = st.columns(col_widths)
@@ -229,8 +229,8 @@ def show_my_books(my_library: md.Library):
             else:
                 col5.markdown(f'<span style="color:green">{duration.days} days ago</span>',unsafe_allow_html=True)
             i +=1
-            if col6.button("Return", key=book_id):
-                my_library.return_book(my_library.readers[st.session_state['card_number']], books[book_id])
+            if col6.button("Return", key=book['book_id']):
+                my_library.return_book(st.session_state['user_id'], book['book_id'])
                 st.session_state['messages'].append({'status':'success','text':'Book successfully returned'})
                 st.rerun()
     else:

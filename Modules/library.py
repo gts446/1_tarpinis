@@ -165,31 +165,32 @@ class Library:
     def get_journal(self, user_id:int = None):
         if user_id:  
             return my_db.query("""
-                SELECT books.id as 'book_id', books.title, books.author, users.name, users.card_number, journal.date_taken, journal.date_returned
+                SELECT books.id as 'book_id', books.title, books.author, books.year,
+                users.name, users.card_number, 
+                journal.date_taken, journal.date_returned
                 FROM journal
                 LEFT JOIN books
                 ON journal.book_id = books.id
                 LEFT JOIN users
                 ON journal.user_id = users.id
-                WHERE journal.user_id = ?
+                WHERE journal.date_returned IS NULL AND journal.user_id = ?
                 """, (user_id,))
         else:
             return my_db.query("""
-                SELECT books.title, books.author, users.name, users.card_number, journal.date_taken, journal.date_returned
+                SELECT books.id as 'book_id', books.title, books.author, books.year,
+                users.name, users.card_number, 
+                journal.date_taken, journal.date_returned
                 FROM journal
                 LEFT JOIN books
                 ON journal.book_id = books.id
                 LEFT JOIN users
                 ON journal.user_id = users.id
+                WHERE journal.date_returned IS NULL
                 """)
 
 
-    def return_book(self, reader:Reader, book:Book):
-        del self.readers[reader.card_number].books[book.id]
-        self.__update_readers_pkl()
-
-        self.books[book.id].taken -= 1
-        self.__update_books_pkl()
+    def return_book(self, user_id, book_id):
+        my_db.query("UPDATE journal SET date_returned = GETDATE() WHERE book_id = ? AND user_id = ? AND date_returned IS NULL", (book_id, user_id))
 
     def get_librarians(self):
         return my_db.query("SELECT * FROM users WHERE type = 1")
