@@ -70,3 +70,7 @@ def show_messages():
             elif message['status'] == 'success':
                 st.success(message['text'])
         st.session_state['messages'] = []
+
+def users_to_dict(users, type:int):
+    if type==1:
+        return {val['username']:val for val in users}

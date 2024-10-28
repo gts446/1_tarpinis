@@ -2,10 +2,13 @@ import Modules as md
 import pages
 import streamlit as st
 import pandas as pd
+import os
+
+# Clear terminal on Windows or Unix-based systems
+os.system('cls' if os.name == 'nt' else 'clear')
 
 
 my_library = md.Library()
-
 
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
@@ -13,6 +16,11 @@ if 'current_page' not in st.session_state:
     st.session_state['current_page'] = ""
 if 'messages' not in st.session_state:
     st.session_state['messages'] = []
+
+if st.session_state['current_page'] == 'show-books':
+    st.set_page_config(page_title=st.session_state['current_page'], layout="wide")
+else:
+    st.set_page_config(page_title=st.session_state['current_page'], layout="centered")
 
 md.helpers.show_messages()
 
