@@ -53,7 +53,15 @@ class Library:
             return True
         else:
             return False
-        
+    
+    def del_reader(self, card_number):
+        if card_number in self.readers:
+            del self.readers[card_number]
+            helpers.write_to_file('Data_files/readers.pkl', self.readers)
+            return True
+        else:
+            return False
+
     def give_book(self, reader:Reader, book:Book):
         self.readers[reader.card_number].books[book.id] = date(2024,8,8)
         self.__update_readers_pkl()

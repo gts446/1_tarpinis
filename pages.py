@@ -100,6 +100,9 @@ def create_book(my_library:md.Library):
 def add_reader(my_library:md.Library):
     for user in my_library.readers.values():
         st.write(f"{user.name} - {user.card_number}")
+        if st.button("Delete", key=user.card_number):
+            my_library.del_reader(user.card_number)
+            st.rerun()
     with st.form("reader"):
         name = st.text_input("Name")
         card_number = st.text_input("Card number")
